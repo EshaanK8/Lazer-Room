@@ -1,84 +1,26 @@
-import unittest
-from unittest.mock import MagicMock, patch
-import lazer_sim
-from lazer_sim import *
-#from mutpy import commandline
-import sys
+from math import gcd
 
-class Test(unittest.TestCase):
-
-    #Unit tests for smallest_vec method
-    def test_smallest_vec_pass(self):
-        self.assertEqual(smallest_vec([2,2]),(1,1))
-
-    #CHANGE: needed to convert return value in code from a list to a tuple
-    def test_smallest_vec_zero(self):
-        self.assertEqual(smallest_vec([0,0]),(0,0))
-
-    #Unit tests for distance method
-    def test_distance_pass(self):
-        self.assertEqual(distance([5,6],[-7,11]),13)
-
-
+# Helper Functions
+# @profile
+def smallest_vec(vec):
     '''
-    #Unit tests for generate_surroundings method
-    def test_generate_surroundings_origin_room(self):
-        og_room = { 'inc': (1,1), 'tar': (2,1), 'xflip': False, 'yflip': False }
-        self.assertEqual(generate_surroundings(og_room, og_room, 3, 3), [
-            { 'inc': (1, 5), 'tar': (2, 5), 'xflip': False, 'yflip': True }, #up
-            { 'inc': (5, 1), 'tar': (4, 1), 'xflip': True, 'yflip': False }, #right
-            { 'inc': (1, -1), 'tar': (2, -1), 'xflip': False, 'yflip': True }, #down
-            { 'inc': (-1, 1), 'tar': (-2, 1), 'xflip': True, 'yflip': False } #left
-        ])
-
-    def test_generate_surroundings_up_room(self):
-        og_room = { 'inc': (1,1), 'tar': (2,1), 'xflip': False, 'yflip': False }
-        up_room = { 'inc': (1, 5), 'tar': (2, 5), 'xflip': False, 'yflip': True }
-        self.assertEqual(generate_surroundings(og_room, up_room, 3, 3), [
-            { 'inc': (1, 7), 'tar': (2, 7), 'xflip': False, 'yflip': False }, #up
-            { 'inc': (5, 5), 'tar': (4, 5), 'xflip': True, 'yflip': True }, #right
-            { 'inc': (1, 1), 'tar': (2, 1), 'xflip': False, 'yflip': False }, #down
-            { 'inc': (-1, 5), 'tar': (-2, 5), 'xflip': True, 'yflip': True } #left
-        ])
-
-    #CHANGE: Added to increase line coverage (if block was never being entered)
-    def test_generate_surroundings_right_room(self):
-        og_room = { 'inc': (1,1), 'tar': (2,1), 'xflip': False, 'yflip': False }
-        right_room = { 'inc': (5, 1), 'tar': (4, 1), 'xflip': True, 'yflip': False }
-        self.assertEqual(generate_surroundings(og_room, right_room, 3, 3), [
-            { 'inc': (5, 5), 'tar': (4, 5), 'xflip': True, 'yflip': True }, #up
-            { 'inc': (7, 1), 'tar': (8, 1), 'xflip': False, 'yflip': False }, #right
-            { 'inc': (5, -1), 'tar': (4, -1), 'xflip': True, 'yflip': True }, #down
-            { 'inc': (1, 1), 'tar': (2, 1), 'xflip': False, 'yflip': False } #left
-        ])
-
-    def test_generate_surroundings_no_dimensions(self):
-        og_room = { 'inc': (0,0), 'tar': (0,0), 'xflip': False, 'yflip': False }
-        self.assertEqual(generate_surroundings(og_room, og_room, 0, 0), [
-            { 'inc': (0, 0), 'tar': (0, 0), 'xflip': False, 'yflip': True }, #up
-            { 'inc': (0, 0), 'tar': (0, 0), 'xflip': True, 'yflip': False }, #right
-            { 'inc': (0, 0), 'tar': (0, 0), 'xflip': False, 'yflip': True }, #down
-            { 'inc': (0, 0), 'tar': (0, 0), 'xflip': True, 'yflip': False } #left
-        ])
+        ((int))->(int)
+        'Normalizes' a vector to its smallest possible integer
+        components (compared to actual normalization, this is much
+        more accurate as it uses ints not floats). Because it is
+        used only for comparing if two vectors have the same
+        direction, this is all that is needed.
     '''
+    div = gcd(vec[0], vec[1])
+    if div == 0:
+        return tuple(vec)
+    return (vec[0]//div, vec[1]//div)
 
+# @profile
+def distance(vec1, vec2):
     '''
-    #Unit tests for simulate method
-    @patch('lazer_sim.generate_surroundings')
-    def test_simulate_trivial(self, mock_generate):
-        self.assertEqual(simulate(3, 3, (1, 1), (2, 1), 0, False), [(1, 0, 0)])
-        mock_generate.assert_not_called()
-
-    @patch('lazer_sim.generate_surroundings')
-    def test_simulate_vertical(self, mock_generate):
-        pass
-
-    @patch('lazer_sim.generate_surroundings')
-    def test_simulate_angled(self, mock_generate):
-        pass
+        ((int), (int))->num
+        Simple Pythagorean theorem implementation to determine
+        the distance between two vectors on a plane.
     '''
-
-if __name__ == '__main__':
-    __spec__ = None
-    unittest.main()
-    #commandline.main(sys.argv)
+    return ((vec1[0]-vec2[0])**2 + (vec1[1]-vec2[1])**2)**0.5
