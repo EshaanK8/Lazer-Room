@@ -1,5 +1,5 @@
 import unittest
-from mock import MagicMock, patch
+from unittest.mock import MagicMock, patch
 import lazer_sim
 from lazer_sim import *
 #from mutpy import commandline
@@ -7,21 +7,9 @@ import sys
 
 class Test(unittest.TestCase):
 
-#TO TEST:
-# smallest_vec
-# generate_surroundings
-# distance
-# simulate
-
     #Unit tests for smallest_vec method
     def test_smallest_vec_pass(self):
         self.assertEqual(smallest_vec([2,2]),(1,1))
-
-    '''
-    @unittest.expectedFailure
-    def test_smallest_vec_fail(self):
-        self.assertEqual(smallest_vec([2,6]),(2,3))
-    '''
 
     #CHANGE: needed to convert return value in code from a list to a tuple
     def test_smallest_vec_zero(self):
@@ -31,12 +19,8 @@ class Test(unittest.TestCase):
     def test_distance_pass(self):
         self.assertEqual(distance([5,6],[-7,11]),13)
 
-    '''
-    @unittest.expectedFailure
-    def test_distance_fail(self):
-        self.assertEqual(distance([8,6]),9)
-    '''
 
+    '''
     #Unit tests for generate_surroundings method
     def test_generate_surroundings_origin_room(self):
         og_room = { 'inc': (1,1), 'tar': (2,1), 'xflip': False, 'yflip': False }
@@ -76,25 +60,14 @@ class Test(unittest.TestCase):
             { 'inc': (0, 0), 'tar': (0, 0), 'xflip': False, 'yflip': True }, #down
             { 'inc': (0, 0), 'tar': (0, 0), 'xflip': True, 'yflip': False } #left
         ])
+    '''
 
+    '''
     #Unit tests for simulate method
     @patch('lazer_sim.generate_surroundings')
     def test_simulate_trivial(self, mock_generate):
         self.assertEqual(simulate(3, 3, (1, 1), (2, 1), 0, False), [(1, 0, 0)])
         mock_generate.assert_not_called()
-
-    '''
-    #Is not passing
-    @patch('lazer_sim.generate_surroundings')
-    def test_simulate_horizontal(self, mock_generate):
-        without_pass_through = simulate(3, 3, (1, 1), (2, 1), 2, False)
-        with_pass_through = simulate(3, 3, (1, 1), (2, 1), 2, True)
-        self.assertEqual(without_pass_through, [
-            (1, 0, 0), (1, 4, 1), (1, -2, 1), (1, 6, 2), (3, 4, 2), (-3, 4, 2),
-            (3, -2, 2), (1, -6, 2), (-3, -2, 2)
-        ])
-        self.assertEqual(len(with_pass_through), len(without_pass_through)+1)
-    '''
 
     @patch('lazer_sim.generate_surroundings')
     def test_simulate_vertical(self, mock_generate):
@@ -103,6 +76,7 @@ class Test(unittest.TestCase):
     @patch('lazer_sim.generate_surroundings')
     def test_simulate_angled(self, mock_generate):
         pass
+    '''
 
 if __name__ == '__main__':
     __spec__ = None
